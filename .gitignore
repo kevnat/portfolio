@@ -31,3 +31,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# source resume documents (content is authored in app/resume/data.ts instead)
+*.docx

@@ -1,0 +1,246 @@
+"use client";
+
+import { useState } from "react";
+import { profile, timeline, type Highlight, type TimelineEntry } from "./data";
+
+const TYPE_LABEL: Record<Highlight["type"], string> = {
+  screenshot: "Screenshot",
+  press: "Press",
+  demo: "Demo",
+};
+
+export default function ResumeClient() {
+  const [activeId, setActiveId] = useState(timeline[0].id);
+  const activeEntry =
+    timeline.find((entry) => entry.id === activeId) ?? timeline[0];
+
+  return (
+    <div className="mx-auto w-full max-w-6xl px-6 pt-16 lg:px-8">
+      <ProfileHeader />
+      <div className="grid grid-cols-1 gap-8 py-12 lg:grid-cols-[220px_1fr_320px] lg:gap-12">
+        <TimelineNav
+          entries={timeline}
+          activeId={activeEntry.id}
+          onSelect={setActiveId}
+        />
+        <Narrative entry={activeEntry} />
+        <HighlightsPanel key={activeEntry.id} highlights={activeEntry.highlights} />
+      </div>
+    </div>
+  );
+}
+
+function ProfileHeader() {
+  return (
+    <header className="border-b border-zinc-200 pb-8 dark:border-zinc-800">
+      <h1 className="text-3xl font-semibold tracking-tight">{profile.name}</h1>
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm text-zinc-500 dark:text-zinc-400">
+        <span>{profile.location}</span>
+        <span aria-hidden>·</span>
+        <a className="hover:text-foreground" href={`mailto:${profile.email}`}>
+          {profile.email}
+        </a>
+        <span aria-hidden>·</span>
+        <span>{profile.phone}</span>
+        <span aria-hidden>·</span>
+        <a
+          className="hover:text-foreground"
+          href={profile.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          linkedin.com/in/kevnat
+        </a>
+      </div>
+      <div className="mt-4 grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <p className="leading-7 text-zinc-700 dark:text-zinc-300">
+          {profile.summary}
+        </p>
+        <div className="space-y-4">
+          {profile.focusAreas.map((group) => (
+            <div key={group.category}>
+              <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+                {group.category}
+              </h2>
+              <ul className="mt-1.5 flex flex-wrap gap-1.5">
+                {group.items.map((item) => (
+                  <li
+                    key={item}
+                    className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function TimelineNav({
+  entries,
+  activeId,
+  onSelect,
+}: {
+  entries: TimelineEntry[];
+  activeId: string;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <nav
+      aria-label="Career timeline"
+      className="flex gap-4 overflow-x-auto pb-2 lg:sticky lg:top-16 lg:block lg:h-fit lg:overflow-visible lg:pb-0"
+    >
+      <ol className="flex gap-4 lg:block lg:gap-0">
+        {entries.map((entry, index) => {
+          const active = entry.id === activeId;
+          const isLast = index === entries.length - 1;
+          return (
+            <li key={entry.id} className="flex shrink-0 gap-3 pb-0 lg:pb-6 last:lg:pb-0">
+              <div className="hidden w-2 shrink-0 flex-col items-center self-stretch lg:flex">
+                <span
+                  aria-hidden
+                  className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
+                    active ? "bg-foreground" : "bg-zinc-300 dark:bg-zinc-700"
+                  }`}
+                />
+                {!isLast && (
+                  <span
+                    aria-hidden
+                    className="w-px flex-1 bg-zinc-200 dark:bg-zinc-800"
+                  />
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => onSelect(entry.id)}
+                aria-current={active ? "true" : undefined}
+                className={`block whitespace-nowrap rounded-lg px-3 py-2 text-left transition-colors lg:whitespace-normal lg:px-0 lg:py-0 ${
+                  active
+                    ? "bg-zinc-100 dark:bg-zinc-900 lg:bg-transparent"
+                    : "hover:bg-zinc-50 dark:hover:bg-zinc-900/50 lg:hover:bg-transparent"
+                }`}
+              >
+                <span className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  {entry.dateRange}
+                </span>
+                <span
+                  className={`block text-sm font-semibold ${
+                    active ? "text-foreground" : "text-zinc-700 dark:text-zinc-300"
+                  }`}
+                >
+                  {entry.title}
+                </span>
+                <span className="block text-xs text-zinc-500 dark:text-zinc-400">
+                  {entry.org}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
+
+function Narrative({ entry }: { entry: TimelineEntry }) {
+  return (
+    <article className="min-w-0">
+      <header className="mb-6">
+        <h1 className="text-2xl font-semibold tracking-tight">{entry.title}</h1>
+        <p className="text-zinc-500 dark:text-zinc-400">
+          {entry.org}
+          {entry.location ? ` · ${entry.location}` : ""} · {entry.dateRange}
+        </p>
+      </header>
+      {entry.summary && (
+        <p className="mb-6 leading-7 text-zinc-700 dark:text-zinc-300">
+          {entry.summary}
+        </p>
+      )}
+      <ul className="space-y-3">
+        {entry.achievements.map((achievement, i) => (
+          <li key={i} className="flex gap-3 leading-6 text-zinc-700 dark:text-zinc-300">
+            <span aria-hidden className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400" />
+            <span>{achievement}</span>
+          </li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
+function HighlightsPanel({ highlights }: { highlights: Highlight[] }) {
+  const [activeId, setActiveId] = useState(highlights[0]?.id);
+  const active = highlights.find((h) => h.id === activeId) ?? highlights[0];
+
+  if (!active) {
+    return (
+      <aside className="text-sm text-zinc-500 dark:text-zinc-400">
+        No highlights yet for this role.
+      </aside>
+    );
+  }
+
+  return (
+    <aside className="lg:sticky lg:top-16 lg:h-fit">
+      <div className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+        <span className="mb-3 inline-block rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium uppercase tracking-wide text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400">
+          {TYPE_LABEL[active.type]}
+        </span>
+
+        {active.type === "screenshot" && (
+          <div
+            aria-hidden
+            className="mb-3 flex aspect-video items-center justify-center rounded-lg bg-gradient-to-br from-zinc-100 to-zinc-200 text-xs text-zinc-400 dark:from-zinc-900 dark:to-zinc-800"
+          >
+            Screenshot placeholder
+          </div>
+        )}
+
+        <h2 className="font-semibold">{active.title}</h2>
+        <p className="mb-2 text-xs text-zinc-500 dark:text-zinc-400">{active.source}</p>
+        <p className="mb-4 text-sm leading-6 text-zinc-700 dark:text-zinc-300">
+          {active.description}
+        </p>
+
+        {active.href && (
+          <a
+            href={active.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-foreground underline underline-offset-4"
+          >
+            {active.type === "demo" ? "Launch demo" : "Read more"} &rarr;
+          </a>
+        )}
+      </div>
+
+      {highlights.length > 1 && (
+        <div className="mt-3 flex gap-2 overflow-x-auto">
+          {highlights.map((highlight) => (
+            <button
+              key={highlight.id}
+              type="button"
+              onClick={() => setActiveId(highlight.id)}
+              aria-current={highlight.id === active.id ? "true" : undefined}
+              className={`shrink-0 rounded-lg border px-3 py-2 text-left text-xs transition-colors ${
+                highlight.id === active.id
+                  ? "border-foreground"
+                  : "border-zinc-200 text-zinc-500 hover:border-zinc-300 dark:border-zinc-800 dark:text-zinc-400 dark:hover:border-zinc-700"
+              }`}
+            >
+              <span className="block font-medium uppercase tracking-wide">
+                {TYPE_LABEL[highlight.type]}
+              </span>
+              <span className="block max-w-[10rem] truncate">{highlight.title}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </aside>
+  );
+}
