@@ -26,7 +26,7 @@ export const profile = {
   phone: "215-740-4214",
   linkedin: "https://www.linkedin.com/in/kevnat",
   summary:
-    "Senior Product Manager with 8+ years building and scaling payments platforms — from 0→1 terminal launches processing $1.6B+ in volume to embedded payments expanding across new markets, currencies, and payment methods. Pairs deep payments domain expertise (gateways, terminals, reconciliation) with hands-on technical fluency to ship faster and work directly with engineering. Holds a patent in remote terminal tokenization.",
+    "Senior Product Manager with 10+ years building and scaling payments platforms across multi-billion dollar transaction volumes, from new terminal launches to embedded payments expanding across new markets, currencies, and payment methods. I thrive in ambiguous, technically complex problem spaces, partnering closely with engineering and design to turn open-ended requirements into simple, seamless solutions that hold up at enterprise scale, including Fortune 500 companies where payments are mission-critical. I pair deep payments domain expertise (gateways, terminals, reconciliation) with hands-on technical fluency to move fast without sacrificing quality.",
   focusAreas: [
     {
       category: "Payments",

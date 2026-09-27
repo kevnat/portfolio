@@ -32,19 +32,19 @@ export default function ResumeClient() {
 
 function ProfileHeader() {
   return (
-    <header className="border-b border-zinc-200 pb-8 dark:border-zinc-800">
+    <header className="border-b border-border pb-8">
       <h1 className="text-3xl font-semibold tracking-tight">{profile.name}</h1>
-      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm text-zinc-500 dark:text-zinc-400">
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted-foreground">
         <span>{profile.location}</span>
         <span aria-hidden>·</span>
-        <a className="hover:text-foreground" href={`mailto:${profile.email}`}>
+        <a className="hover:text-accent" href={`mailto:${profile.email}`}>
           {profile.email}
         </a>
         <span aria-hidden>·</span>
         <span>{profile.phone}</span>
         <span aria-hidden>·</span>
         <a
-          className="hover:text-foreground"
+          className="hover:text-accent"
           href={profile.linkedin}
           target="_blank"
           rel="noopener noreferrer"
@@ -53,13 +53,13 @@ function ProfileHeader() {
         </a>
       </div>
       <div className="mt-4 grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <p className="leading-7 text-zinc-700 dark:text-zinc-300 lg:col-span-2">
+        <p className="leading-7 text-foreground/85 lg:col-span-2">
           {profile.summary}
         </p>
         <div className="space-y-4">
           {profile.focusAreas.map((group) => (
             <div key={group.category}>
-              <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+              <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {group.category}
               </h2>
               <SkillsMarquee items={group.items} />
@@ -83,7 +83,7 @@ function SkillsMarquee({ items }: { items: string[] }) {
         {items.map((item) => (
           <span
             key={item}
-            className="shrink-0 rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400"
+            className="shrink-0 rounded-full bg-surface px-2.5 py-1 text-xs text-muted-foreground"
           >
             {item}
           </span>
@@ -92,7 +92,7 @@ function SkillsMarquee({ items }: { items: string[] }) {
           <span
             key={`${item}-dup`}
             aria-hidden="true"
-            className="shrink-0 rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400"
+            className="shrink-0 rounded-full bg-surface px-2.5 py-1 text-xs text-muted-foreground"
           >
             {item}
           </span>
@@ -126,14 +126,11 @@ function TimelineNav({
                 <span
                   aria-hidden
                   className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
-                    active ? "bg-foreground" : "bg-zinc-300 dark:bg-zinc-700"
+                    active ? "bg-accent" : "bg-border"
                   }`}
                 />
                 {!isLast && (
-                  <span
-                    aria-hidden
-                    className="w-px flex-1 bg-zinc-200 dark:bg-zinc-800"
-                  />
+                  <span aria-hidden className="w-px flex-1 bg-border" />
                 )}
               </div>
               <button
@@ -142,21 +139,21 @@ function TimelineNav({
                 aria-current={active ? "true" : undefined}
                 className={`block whitespace-nowrap rounded-lg px-3 py-2 text-left transition-colors lg:whitespace-normal lg:px-0 lg:py-0 ${
                   active
-                    ? "bg-zinc-100 dark:bg-zinc-900 lg:bg-transparent"
-                    : "hover:bg-zinc-50 dark:hover:bg-zinc-900/50 lg:hover:bg-transparent"
+                    ? "bg-accent/10 lg:bg-transparent"
+                    : "hover:bg-surface lg:hover:bg-transparent"
                 }`}
               >
-                <span className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                <span className="block text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   {entry.dateRange}
                 </span>
                 <span
                   className={`block text-sm font-semibold ${
-                    active ? "text-foreground" : "text-zinc-700 dark:text-zinc-300"
+                    active ? "text-accent" : "text-foreground/85"
                   }`}
                 >
                   {entry.title}
                 </span>
-                <span className="block text-xs text-zinc-500 dark:text-zinc-400">
+                <span className="block text-xs text-muted-foreground">
                   {entry.org}
                 </span>
               </button>
@@ -173,20 +170,18 @@ function Narrative({ entry }: { entry: TimelineEntry }) {
     <article className="min-w-0">
       <header className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight">{entry.title}</h1>
-        <p className="text-zinc-500 dark:text-zinc-400">
+        <p className="text-muted-foreground">
           {entry.org}
           {entry.location ? ` · ${entry.location}` : ""} · {entry.dateRange}
         </p>
       </header>
       {entry.summary && (
-        <p className="mb-6 leading-7 text-zinc-700 dark:text-zinc-300">
-          {entry.summary}
-        </p>
+        <p className="mb-6 leading-7 text-foreground/85">{entry.summary}</p>
       )}
       <ul className="space-y-3">
         {entry.achievements.map((achievement, i) => (
-          <li key={i} className="flex gap-3 leading-6 text-zinc-700 dark:text-zinc-300">
-            <span aria-hidden className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400" />
+          <li key={i} className="flex gap-3 leading-6 text-foreground/85">
+            <span aria-hidden className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-accent" />
             <span>{achievement}</span>
           </li>
         ))}
@@ -201,8 +196,8 @@ function HighlightsPanel({ highlights }: { highlights: Highlight[] }) {
 
   if (!active) {
     return (
-      <aside className="text-sm text-zinc-500 dark:text-zinc-400">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+      <aside className="text-sm text-muted-foreground">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Product Highlights
         </h2>
         No highlights yet for this role.
@@ -216,26 +211,26 @@ function HighlightsPanel({ highlights }: { highlights: Highlight[] }) {
 
   return (
     <aside className="lg:sticky lg:top-16 lg:h-fit">
-      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         Product Highlights
       </h2>
-      <div className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
-        <span className="mb-3 inline-block rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium uppercase tracking-wide text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400">
+      <div className="rounded-xl border border-border p-4">
+        <span className="mb-3 inline-block rounded-full bg-surface px-2 py-0.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {TYPE_LABEL[active.type]}
         </span>
 
         {active.type === "screenshot" && (
           <div
             aria-hidden
-            className="mb-3 flex aspect-video items-center justify-center rounded-lg bg-gradient-to-br from-zinc-100 to-zinc-200 text-xs text-zinc-400 dark:from-zinc-900 dark:to-zinc-800"
+            className="mb-3 flex aspect-video items-center justify-center rounded-lg bg-gradient-to-br from-surface to-border text-xs text-muted-foreground"
           >
             Screenshot placeholder
           </div>
         )}
 
         <h3 className="font-semibold">{active.title}</h3>
-        <p className="mb-2 text-xs text-zinc-500 dark:text-zinc-400">{active.source}</p>
-        <p className="mb-4 text-sm leading-6 text-zinc-700 dark:text-zinc-300">
+        <p className="mb-2 text-xs text-muted-foreground">{active.source}</p>
+        <p className="mb-4 text-sm leading-6 text-foreground/85">
           {active.description}
         </p>
 
@@ -244,7 +239,7 @@ function HighlightsPanel({ highlights }: { highlights: Highlight[] }) {
             href={active.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-foreground underline underline-offset-4"
+            className="text-sm font-medium text-accent underline underline-offset-4"
           >
             {active.type === "demo" ? "Launch demo" : "Read more"} &rarr;
           </a>
@@ -257,18 +252,18 @@ function HighlightsPanel({ highlights }: { highlights: Highlight[] }) {
             type="button"
             onClick={goPrev}
             aria-label="Previous highlight"
-            className="rounded-full border border-zinc-200 px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:border-zinc-300 hover:text-foreground dark:border-zinc-800 dark:text-zinc-400 dark:hover:border-zinc-700"
+            className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-accent hover:text-accent"
           >
             &larr; Prev
           </button>
-          <span className="text-xs text-zinc-400 dark:text-zinc-500">
+          <span className="text-xs text-muted-foreground">
             {index + 1} / {highlights.length}
           </span>
           <button
             type="button"
             onClick={goNext}
             aria-label="Next highlight"
-            className="rounded-full border border-zinc-200 px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:border-zinc-300 hover:text-foreground dark:border-zinc-800 dark:text-zinc-400 dark:hover:border-zinc-700"
+            className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-accent hover:text-accent"
           >
             Next &rarr;
           </button>
